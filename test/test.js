@@ -4,8 +4,11 @@ const expect = chai.expect;
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised).should();
 
+
 const User = require('../models/user');
 const Restaurant = require('../models/restaurants');
+const Review = require('../models/reviews');
+
 
 // add a "describe block" for restaurant tests
 describe('Restaurant model', () => {
@@ -102,5 +105,102 @@ describe('Users model', () => {
         //         expect(alsoTheUser.email).to.equal('new3asdfadf@new.com');
         //     });
     });    
+
+    it('should encrypt the password', async () => {
+        const password = "bacon";
+        // get a user with id 1
+        const theUser = await User.getById(1);
+        // set their password field to "bacon"
+        theUser.setPassword(password);
+        // compare their password to "bacon"
+        expect(theUser.password).not.to.equal(password);
+        // it should be false
+    });
+
+
+    it('should be able to check for correct passwords', async () => {
+        // get a user with id 1
+        const theUser = await User.getById(1);
+        // set their password field to "bacon"
+        theUser.setPassword("bacon");
+
+        // save them to the database
+        await theUser.save();
+
+        // get them back out of the database
+        const sameUser = await User.getById(1);
+
+        // ask them if their password is "bacon"
+        const isCorrectPassword = sameUser.checkPassword("bacon");
+        expect(isCorrectPassword).to.be.true;
+
+        const isNotCorrectPassword = sameUser.checkPassword("tofu");
+        expect(isNotCorrectPassword).to.be.false;
+    });
 });
 
+describe('Review model', () => {
+    // Can I get one review?
+    it('should be able to retrieve a review by id', async () => {
+        // hopes and dreams
+        const thatReview = await Review.getById(1);
+        expect(thatReview).to.be.an.instanceOf(Review);
+    });
+    // Can I get all reviews?
+    it('should be able to retrieve all reviewws', async () => {
+        const aBunchOfReviews = await Review.getAll();
+        expect(aBunchOfReviews).to.be.an.instanceOf(Array);
+        // and make sure each of them is an array
+        // Use a plain for loop,  so that the exception does not
+        // get swallowed by a .forEach callback
+        for (let i = 0; i < aBunchOfReviews.length; i ++) {
+            expect(aBunchOfReviews[i]).to.be.an.instanceOf(Review);
+        }
+    })
+    // Can I get a review by a user?
+});
+
+describe('Users and Reviews', () => {
+    it('A user instance should be able to retrieve all their reviews', async () => {
+        // grab a user by id 
+        const theUser = await User.getById(3);
+        // then get all their reviews 
+
+
+        // const theReviews = await theUser.getReviews();
+        const theReviews = await theUser.reviews;
+
+
+        // confirm that their reviews are in an array
+        expect(theReviews).to.be.an.instanceOf(Array);
+        // and that the array is the correct length 
+        expect(theReviews).to.have.lengthOf(3);
+        // and that each one is an instance of Review 
+        for (let i = 0; i<theReviews.length; i++) {
+            expect(theReviews[i]).to.be.an.instanceOf(Review);
+        };
+    })
+});
+
+describe('Favorites model', () => {
+    it('should grab all favorites for a user', async () => {
+        const theUser = await User.getById(3);
+
+        const theFavorites = await theUser.favorites;
+
+        expect(theFavorites).to.be.an.instanceOf(Array);
+    });
+
+
+    it('should let user set a favorite restaurant', async () => {
+        const theRestaurant = await Restaurant.getRestaurant(1);
+
+        const theUser = await User.getById(1);
+
+        theUser.favorited = theRestaurant.name;
+
+        theFavoritedRestaurant = theUser.setFavorite(restaurant);
+
+        expect(theFavoritedRestaurant).to.be.an.instanceOf(Array);
+    })
+});
