@@ -1,0 +1,22 @@
+
+*** SQL ***
+Insert a user
+Select users or a users
+Update a users
+Delete a user
+
+*** Users Model ***
+(Create a user)
+Retrieve users (either one or many)
+Update users (one)
+(Delete a user) 
+
+"CRUD app"
+
+*** RESTful API ***
+C - POST 
+R - GET 
+U - PUT/PATCH
+D - DELETE 
+
+(http verbs)
