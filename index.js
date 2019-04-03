@@ -14,12 +14,21 @@ app.set('view engine', 'html'); // Tell express to use as its view engine the th
 app.set('views', 'views'); // Tell express where to find the view files 
 // (The second argument is the name of the directory where my template files will live.)
 
+app.use(express.urlencoded({ extended: true }));
+
 // When they ask for the login page, send the login form
 app.get('/login', (req, res) => {
     // Send them the form 
     // res.send('This is the login form.')
     res.render('login-form')
-})
+});
+
+// When they submit the form, process the form data. 
+app.post('/login', (req, res) => {
+    console.log(req.body.email);
+    console.log(req.body.password);
+    res.send('No soup for you');
+});
 
 
 // Import my model cass
