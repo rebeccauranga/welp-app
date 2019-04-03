@@ -27,7 +27,14 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
     console.log(req.body.email);
     console.log(req.body.password);
-    res.send('No soup for you');
+    // res.send('No soup for you');
+    // Let's just assume they typed in the correct password. 
+    res.redirect('/dashboard'); 
+    // TO-DO: Check password for real. :)
+});
+
+app.get('/dashboard', (req, res) => {
+    res.send('Welcome back to WELP!')
 });
 
 
